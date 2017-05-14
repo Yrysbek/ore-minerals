@@ -8,6 +8,13 @@ mineralApp.factory('Role', function ($resource) {
     return $resource('/api/roles/:id', {id: '@id'}, {'update': {method: 'PUT'}});
 });
 
+mineralApp.factory('MineralClass', function ($resource) {
+    return $resource('/api/mineralClasses/:id', {id: '@id'}, {'update': {method: 'PUT'}});
+});
+mineralApp.factory('Mineral', function ($resource) {
+    return $resource('/api/minerals/:id', {id: '@id'}, {'update': {method: 'PUT'}});
+});
+
 function successAlert(message) {
     $.notify({
         title: "<strong>Инфо:</strong> ",

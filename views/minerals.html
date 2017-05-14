@@ -5,44 +5,119 @@
       <tr>
         <th>ID</th>
         <th>Название</th>
-        <th>ИНН</th>
-        <th>Email</th>
-        <th>Адрес</th>
-        <th>Контакты</th>
+        <th>Хим.состав</th>
+        <th>Цвет</th>
+        <th>Твердость</th>
+        <th>Плотность</th>
         <th>Операции</th>
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="mineral in minerals">
+      <tr ng-repeat="mineral in Minerals">
         <th scope="row">{{mineral.id}}</th>
         <td>{{mineral.name}}</td>
-        <td>{{mineral.inn}}</td>
-        <td>{{mineral.email}}</td>
-        <td>{{mineral.address}}</td>
-        <td>{{mineral.contacts}}</td>
+        <td>{{mineral.composition}}</td>
+        <td>{{mineral.color}}</td>
+        <td>{{mineral.hardness_from}}-{{mineral.hardness_to}}</td>
+        <td>{{mineral.density_from}}-{{mineral.density_to}}</td>
         <td>
+          <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
           <button class="btn btn-primary" ng-click="editMineral(mineral)">Редактировать</button>
+          <% } %>
         </td>
       </tr>
     </tbody>
-    <tfoot>
-      <form>
-        <tr>
-          <td><input type="hidden" class="form-control" ng-model="editedMineral.id" /></td>
-          <td><input type="text" class="form-control" ng-model="editedMineral.name" required/></td>
-          <td><input type="text" class="form-control" ng-model="editedMineral.inn" required /></td>
-          <td><input type="email" class="form-control" ng-model="editedMineral.email" required /></td>
-          <td><input type="text" class="form-control" ng-model="editedMineral.address" required /></td>
-          <td><input type="text" class="form-control" ng-model="editedMineral.contacts" required /></td>
-          <td>
-            <button class="btn btn-primary" ng-click="saveMineral()" ng-hide="editedMineral.id">Сохранить</button>
-            <button class="btn btn-primary" ng-click="updateMineral(editedMineral)" ng-show="editedMineral.id">Сохранить</button>
-            <button class="btn btn-danger" ng-click="editedMineral=null">Отмена</button>
-          </td>
-        </tr>
-      </form>
-    </tfoot>
   </table>
+
+  <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
+  <form class="form-horizontal bg-info" style="padding: 20px 0;border-radius: 5px;">
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Название</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" ng-model="editedMineral.name" placeholder="Название" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Химический состав</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" ng-model="editedMineral.composition" placeholder="Химический состав">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Цвет</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" ng-model="editedMineral.color" placeholder="Цвет">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Цвет черты</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" ng-model="editedMineral.color_p" placeholder="Цвет черты">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Блеск</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" ng-model="editedMineral.shine" placeholder="Блеск">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Твердость</label>
+      <div class="col-sm-4">
+        <input type="number" class="form-control" ng-model="editedMineral.hardness_from" placeholder="от">
+      </div>
+      <div class="col-sm-4">
+        <input type="number" class="form-control" ng-model="editedMineral.hardness_to" placeholder="до">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Плотность</label>
+      <div class="col-sm-4">
+        <input type="number" class="form-control" ng-model="editedMineral.density_from" placeholder="от">
+      </div>
+      <div class="col-sm-4">
+        <input type="number" class="form-control" ng-model="editedMineral.density_to" placeholder="до">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Спайность, излом</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" ng-model="editedMineral.cleavage" placeholder="Спайность, излом">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Форма кристаллов</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" ng-model="editedMineral.crystal_form" placeholder="Форма кристаллов">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Минеральные агрегаты</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" ng-model="editedMineral.mineral_aggregates" placeholder="Минеральные агрегаты">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Диагностические признаки</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" ng-model="editedMineral.diagnostic_signs" placeholder="Диагностические признаки">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Доп. информация</label>
+      <div class="col-sm-8">
+        <textarea class="form-control" ng-model="editedMineral.description" placeholder="Доп. информация"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-8">
+        <button class="btn btn-primary" ng-click="saveMineral()" ng-hide="editedMineral.id">Сохранить</button>
+        <button class="btn btn-primary" ng-click="updateMineral(editedMineral)" ng-show="editedMineral.id">Сохранить</button>
+        <button class="btn btn-danger" ng-click="editedMineral=null">Отмена</button>
+      </div>
+    </div>
+  </form>
+  <% } %>
 </div>
 <script src="app/mineralsController.js"></script>
 <% include layout_footer.html %>

@@ -13,6 +13,9 @@ router.get('/admin', middlewares.hasRole('pageAdmin'), function (req, res) {
 router.get('/minerals', function (req, res) {
     res.render('minerals.html', {title: 'Рудные минералы', session: req.session});
 });
+router.get('/mineralClasses', function (req, res) {
+    res.render('mineralClasses.html', {title: 'Классы рудных минералов', session: req.session});
+});
 
 router.get('/permission', function (req, res) {
     res.render('permission.html', {title: 'Ошибка доступа', session: req.session});

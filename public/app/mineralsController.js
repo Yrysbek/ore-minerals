@@ -1,4 +1,4 @@
-mineralApp.controller("MineralsController", function ($scope, $http, Mineral) {
+mineralApp.controller("mineralsController", function ($scope, $http, Mineral) {
 
     fillMinerals();
 

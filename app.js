@@ -29,10 +29,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/api/minerals', require('./routes/minerals'));
 
 app.use('/', require('./routes/index'));
 app.use('/', require('./routes/auth'));
+app.use('/api/minerals', require('./routes/minerals'));
+app.use('/api/mineralClasses', require('./routes/mineralClasses'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/roles', require('./routes/roles'));
 

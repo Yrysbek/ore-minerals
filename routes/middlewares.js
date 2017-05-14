@@ -1,7 +1,7 @@
 var middlewares = {
     hasRole: function (role) {
         return function (req, res, next) {
-            if (req.session.user.roles.indexOf(role) != -1) {
+            if (req.session.user && req.session.user.roles.indexOf(role) != -1) {
                 next();
             } else {
                 if (req.xhr || req.headers.accept.indexOf('json') > -1)

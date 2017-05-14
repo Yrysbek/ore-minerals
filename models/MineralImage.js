@@ -8,7 +8,8 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true
     },
     "description": DataTypes.TEXT,
-    "url": DataTypes.STRING
+    "url": DataTypes.STRING,
+    "filename": DataTypes.STRING
   }, {
     tableName: "mineral_image",
     underscored: true,
