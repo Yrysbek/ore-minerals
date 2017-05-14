@@ -1,10 +1,18 @@
-mineralApp.controller("mineralsController", function ($scope, $http, Mineral) {
+mineralApp.controller("mineralsController", function ($scope, $http, Mineral, MineralClass) {
 
     fillMinerals();
 
     function fillMinerals(){
       Mineral.query(function(Minerals) {
         $scope.Minerals = Minerals;
+      }, handleError);
+    }
+
+    fillMineralClasses();
+
+    function fillMineralClasses(){
+      MineralClass.query(function(MineralClasses) {
+        $scope.MineralClasses = MineralClasses;
       }, handleError);
     }
 

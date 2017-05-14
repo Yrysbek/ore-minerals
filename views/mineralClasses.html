@@ -17,6 +17,7 @@
         <td>
           <% if(session.user && session.user.roles.indexOf('mineralClassesAdmin')!=-1){ %>
             <button class="btn btn-primary" ng-click="editMineralClass(mineralClass)">Редактировать</button>
+            <button class="btn btn-danger" ng-click="deleteMineralClass(mineralClass)">Удалить</button>
           <% } %>
         </td>
       </tr>
