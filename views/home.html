@@ -1,0 +1,14 @@
+<% include layout_header.html %>
+<script src="app/homeController.js"></script>
+<div ng-controller="homeController">
+  <div class="col-md-4 col-md-offset-4">
+  <% if(session.user && session.user.roles.indexOf('pageAdmin')!=-1){ %>
+    <p><a class="form-control btn btn-primary" href="/admin">Админ панель</a></p>
+  <% } %>
+  <% if(session.user && session.user.roles.indexOf('pageMineralClass')!=-1){ %>
+    <p><a class="form-control btn btn-primary" href="/mineral-class">Классы рудных минералов</a></p>
+  <% } %>
+    <p><a class="form-control btn btn-primary" href="/minerals">Рудные минералы</a></p>
+  </div>
+</div>
+<% include layout_footer.html %>

@@ -1,0 +1,88 @@
+<% include layout_header.html %>
+<div ng-controller="adminController">
+  <p>
+    <button class="btn" ng-class="{'btn-primary': table=='users'}" ng-click="table='users'">Пользователи</button>
+    <button class="btn" ng-class="{'btn-primary': table=='roles'}" ng-click="table='roles'; selectedUser=false;">Роли</button>
+  </p>
+  <table class="table table-bordered table-hover bg-info" ng-hide="table!='users'">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Логин</th>
+        <th>Email</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Операции</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="user in users">
+        <th scope="row">{{user.id}}</th>
+        <td>{{user.login}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.firstname}}</td>
+        <td>{{user.lastname}}</td>
+        <td>
+          <button class="btn btn-primary" ng-click="editUser(user)">Редактировать</button>
+          <button class="btn btn-danger" ng-click="deleteUser(user)">Удалить</button>
+          <button class="btn btn-success" ng-click="setRoles(user)">Установить роли</button>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td><input type="hidden" class="form-control" ng-model="editedUser.id" /></td>
+        <td>
+          <input type="text" class="form-control" ng-model="editedUser.login" placeholder="логин" />
+          <input type="text" class="form-control" ng-model="editedUser.password" placeholder="пароль" />
+        </td>
+        <td><input type="text" class="form-control" ng-model="editedUser.email" /></td>
+        <td><input type="text" class="form-control" ng-model="editedUser.firstname" /></td>
+        <td><input type="text" class="form-control" ng-model="editedUser.lastname" /></td>
+        <td>
+          <button class="btn btn-primary" ng-click="saveUser()" ng-hide="editedUser.id">Сохранить</button>
+          <button class="btn btn-primary" ng-click="updateUser(editedUser)" ng-show="editedUser.id">Сохранить</button>
+          <button class="btn btn-danger" ng-click="editedUser=null">Отмена</button>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <table class="table table-bordered table-hover bg-info" ng-show="table=='roles' || selectedUser">
+    <thead>
+      <tr>
+        <th ng-show="selectedUser">Выбрать</th>
+        <th>ID</th>
+        <th>Название</th>
+        <th ng-hide="selectedUser">Операции</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="role in roles">
+        <td ng-show="selectedUser"><input type="checkbox" ng-model="role.selected"/></td>
+        <td>{{role.id}}</td>
+        <td>{{role.name}}</td>
+        <td ng-hide="selectedUser">
+          <button class="btn btn-primary" ng-click="editRole(role)">Редактировать</button>
+          <button class="btn btn-danger" ng-click="deleteRole(role)">Удалить</button>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot ng-hide="selectedUser">
+      <tr>
+        <td ng-show="selectedUser">
+        </td>
+        <td><input type="hidden" class="form-control" ng-model="editedRole.id" /></td>
+        <td><input type="text" class="form-control" ng-model="editedRole.name" /></td>
+        <td>
+          <button class="btn btn-primary" ng-click="saveRole()" ng-hide="editedRole.id">Сохранить</button>
+          <button class="btn btn-primary" ng-click="updateRole(editedRole)" ng-show="editedRole.id">Сохранить</button>
+          <button class="btn btn-danger" ng-click="editedRole=null">Отмена</button>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+  <button ng-show="selectedUser" class="btn btn-primary" ng-click="saveUserRoles(userRoles)">Сохранить роли пользователя</button>
+</div>
+<script src="app/adminController.js"></script>
+<% include layout_footer.html %>

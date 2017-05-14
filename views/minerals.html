@@ -1,0 +1,48 @@
+<% include layout_header.html %>
+<div ng-controller="mineralsController">
+  <table class="table table-bordered table-hover bg-info">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>ИНН</th>
+        <th>Email</th>
+        <th>Адрес</th>
+        <th>Контакты</th>
+        <th>Операции</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="mineral in minerals">
+        <th scope="row">{{mineral.id}}</th>
+        <td>{{mineral.name}}</td>
+        <td>{{mineral.inn}}</td>
+        <td>{{mineral.email}}</td>
+        <td>{{mineral.address}}</td>
+        <td>{{mineral.contacts}}</td>
+        <td>
+          <button class="btn btn-primary" ng-click="editMineral(mineral)">Редактировать</button>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <form>
+        <tr>
+          <td><input type="hidden" class="form-control" ng-model="editedMineral.id" /></td>
+          <td><input type="text" class="form-control" ng-model="editedMineral.name" required/></td>
+          <td><input type="text" class="form-control" ng-model="editedMineral.inn" required /></td>
+          <td><input type="email" class="form-control" ng-model="editedMineral.email" required /></td>
+          <td><input type="text" class="form-control" ng-model="editedMineral.address" required /></td>
+          <td><input type="text" class="form-control" ng-model="editedMineral.contacts" required /></td>
+          <td>
+            <button class="btn btn-primary" ng-click="saveMineral()" ng-hide="editedMineral.id">Сохранить</button>
+            <button class="btn btn-primary" ng-click="updateMineral(editedMineral)" ng-show="editedMineral.id">Сохранить</button>
+            <button class="btn btn-danger" ng-click="editedMineral=null">Отмена</button>
+          </td>
+        </tr>
+      </form>
+    </tfoot>
+  </table>
+</div>
+<script src="app/mineralsController.js"></script>
+<% include layout_footer.html %>

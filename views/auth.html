@@ -1,0 +1,18 @@
+<% include layout_header.html %>
+<div ng-controller="authController">
+  <div class="col-md-4 col-md-offset-4">
+    <form class="form-signin">
+      <h2 class="form-signin-heading">Please sign in</h2>
+      <input type="text" ng-model="user.login" class="form-control" placeholder="login" required="" autofocus="">
+      <input type="password" ng-model="user.password" class="form-control" placeholder="password" required="">
+      <button class="btn btn-lg btn-primary btn-block" ng-click="signin()">Sign in</button>
+    </form>
+    <br>
+    <div class="alert alert-danger alert-dismissible fade in" role="alert" ng-show="error">
+      <button type="button" class="close" ng-click="error=false"><span aria-hidden="true">×</span></button>
+      <strong>Ошибка!</strong> {{error.message}}
+    </div>
+  </div>
+</div>
+<script src="app/authController.js"></script>
+<% include layout_footer.html %>
