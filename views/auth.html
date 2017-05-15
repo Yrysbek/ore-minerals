@@ -2,10 +2,10 @@
 <div ng-controller="authController">
   <div class="col-md-4 col-md-offset-4">
     <form class="form-signin">
-      <h2 class="form-signin-heading">Please sign in</h2>
-      <input type="text" ng-model="user.login" class="form-control" placeholder="login" required="" autofocus="">
-      <input type="password" ng-model="user.password" class="form-control" placeholder="password" required="">
-      <button class="btn btn-lg btn-primary btn-block" ng-click="signin()">Sign in</button>
+      <h2 class="form-signin-heading">Авторизация</h2>
+      <input type="text" ng-model="user.login" class="form-control" placeholder="логин" required="" autofocus="">
+      <input type="password" ng-model="user.password" class="form-control" placeholder="пароль" required="">
+      <button class="btn btn-lg btn-primary btn-block" ng-click="signin()">Войти</button>
     </form>
     <br>
     <div class="alert alert-danger alert-dismissible fade in" role="alert" ng-show="error">
