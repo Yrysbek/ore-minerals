@@ -3,6 +3,7 @@ var session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 
 var models = require('./models');
 models.sequelize.sync().then(function () {
@@ -28,7 +29,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+app.use(fileUpload());
 
 app.use('/', require('./routes/index'));
 app.use('/', require('./routes/auth'));

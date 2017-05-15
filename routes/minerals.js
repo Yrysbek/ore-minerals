@@ -6,9 +6,18 @@ var middlewares = require('./middlewares');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  models.Mineral.findAll().then(function(minerals){
+  models.Mineral.findAll({
+    include: [{
+      model: models.MineralClass,
+      as: "MineralClass"
+    }, {
+      model: models.MineralImage,
+      as: "MineralImage"
+    }]
+  }).then(function(minerals){
     res.json(minerals);
   }).catch(function(error){
+    console.log(error);
     res.status(400).json({message: error});
   });
 });
@@ -36,6 +45,41 @@ router.put('/:id', middlewares.hasRole('mineralsAdmin'), function(req, res){
     res.json(result[1][0]);
   }).catch(function(error){
     res.status(400).json({message: error});
+  });
+});
+
+router.post('/:id/uploadImage', middlewares.hasRole('mineralsAdmin'), function(req, res) {
+  if (!req.files)
+    return res.status(400).send('No files were uploaded.');
+
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  let image = req.files.image;
+
+  var fs = require('fs');
+  var publicDir = __dirname + '/../public';
+  var dir = '/uploads/minerals/'+req.params.id;
+
+  if (!fs.existsSync(publicDir + dir)){
+     fs.mkdirSync(publicDir + dir);
+  }
+
+  // Use the mv() method to place the file somewhere on your server
+  var date = new Date();
+  var imageUrl = dir + '/' + date.getTime() + '.' + req.files.image.name.split('.').pop();
+  image.mv(publicDir + imageUrl, function(err) {
+    if (err)
+      return res.status(500).send(err);
+
+    models.MineralImage.create({
+      filename: req.files.image.name,
+      url: imageUrl,
+      description: req.body.description,
+      mineral_id: req.params.id
+    }).then(function(image){
+      return res.json(image);
+    }).catch(function(err){
+      return res.status(400).json(err);
+    })
   });
 });
 

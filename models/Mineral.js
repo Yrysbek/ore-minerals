@@ -27,6 +27,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Mineral.belongsTo(models.User, {as: 'User'});
+        Mineral.belongsTo(models.MineralClass, {as: 'MineralClass'});
         Mineral.hasMany(models.MineralImage, {as: 'MineralImage'});
       }
     }
