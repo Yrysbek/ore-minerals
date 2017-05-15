@@ -8,14 +8,23 @@ mineralApp.controller("mineralsController", function ($scope, $http, Mineral, Mi
       hardness: true,
       density: true
     };
+    $scope.page = 1;
 
     fillMinerals();
     $scope.fillMinerals = fillMinerals;
 
     function fillMinerals(){
-      Mineral.query(function(Minerals) {
-        $scope.Minerals = Minerals;
+      $http.get('/api/minerals', {params:{page: $scope.page}}).then(function(result) {
+        $scope.Minerals = result.data.rows;
+        $scope.pageCount = result.data.pageCount;
       }, handleError);
+    }
+
+    $scope.movePage = function(move){
+      if((move==-1 && $scope.page<=1) || (move==1 && $scope.page>=$scope.pageCount))
+        return;
+      $scope.page += move;
+      fillMinerals();
     }
 
     fillMineralClasses();

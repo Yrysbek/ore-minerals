@@ -6,16 +6,24 @@ var middlewares = require('./middlewares');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  models.Mineral.findAll({
-    include: [{
-      model: models.MineralClass,
-      as: "MineralClass"
-    }, {
-      model: models.MineralImage,
-      as: "MineralImage"
-    }]
+  var itemsPerPage = 9;
+  var pageCount = 0;
+  models.Mineral.count().then(function(mineralsCount){
+    pageCount = Math.ceil(mineralsCount / itemsPerPage);
+    return models.Mineral.findAll({
+      include: [{
+        model: models.MineralClass,
+        as: "MineralClass"
+      }, {
+        model: models.MineralImage,
+        as: "MineralImage"
+      }],
+      limit: itemsPerPage,
+      offset: (req.query.page-1) * itemsPerPage
+    });
   }).then(function(minerals){
-    res.json(minerals);
+    var result = {pageCount: pageCount, rows: minerals};
+    res.json(result);
   }).catch(function(error){
     console.log(error);
     res.status(400).json({message: error});

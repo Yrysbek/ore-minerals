@@ -31,7 +31,7 @@
     <div class="checkbox"><label><input type="checkbox" ng-model="columns.mineral_aggregates" /> Минеральные агрегаты</label></div>
     <div class="checkbox"><label><input type="checkbox" ng-model="columns.diagnostic_signs" /> Диагностические признаки</label></div>
   </div>
-  <br><br>
+  <br>
   <table class="table table-bordered table-hover bg-info" ng-if="view=='table'">
     <thead>
       <tr>
@@ -94,8 +94,8 @@
             <p ng-show="columns.color">Цвет: {{mineral.color}}</p>
             <p ng-show="columns.color_p">Цвет черты: {{mineral.color_p}}</p>
             <p ng-show="columns.shine">Блеск: {{mineral.shine}}</p>
-            <p ng-show="columns.hardness">Твердость: {{mineral.hardness_from}}-{{mineral.hardness_to}}</p>
-            <p ng-show="columns.density">Плотность: {{mineral.density_from}}-{{mineral.density_to}}</p>
+            <p ng-show="columns.hardness">Твердость: {{mineral.hardness_from}}<span ng-show="mineral.hardness_from!=mineral.hardness_to">-{{mineral.hardness_to}}</span></p>
+            <p ng-show="columns.density">Плотность: {{mineral.density_from}}<span ng-show="mineral.density_from!=mineral.density_to">-{{mineral.density_to}}</span></p>
             <p ng-show="columns.cleavage">Спайность, излом: {{mineral.cleavage}}</p>
             <p ng-show="columns.crystal_form">Форма кристаллов: {{mineral.crystal_form}}</p>
             <p ng-show="columns.mineral_aggregates">Минеральные агрегаты: {{mineral.mineral_aggregates}}</p>
@@ -112,9 +112,16 @@
     </div>
     <div class="clearfix"></div>
   </div>
+  <nav aria-label="...">
+    <ul class="pager">
+      <li ng-class="{'disabled': page<=1}"><a style="cursor: pointer" ng-click="movePage(-1)"><span aria-hidden="true">&larr;</span>Пред.</a></li>
+      <li><a>стр. {{page}} из {{pageCount}}</a></li>
+      <li ng-class="{'disabled': page>=pageCount}"><a style="cursor: pointer" ng-click="movePage(1)">След.<span aria-hidden="true">&rarr;</span></a></li>
+    </ul>
+  </nav>
 
   <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
-  <form class="form-horizontal bg-info" style="padding: 20px 0;border-radius: 5px;">
+  <form id="editMineral" class="form-horizontal bg-info" style="padding: 20px 0;border-radius: 5px;">
     <div class="form-group">
       <label class="col-sm-3 control-label">Класс</label>
       <div class="col-sm-8">

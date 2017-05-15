@@ -24,7 +24,7 @@ router.post('/signin', function (req, res) {
         lastname: user.lastname,
         roles: roles
       };
-      res.json(user);
+      res.json({status: 'success'});
     } else {
       res.status(400).json({message: 'Неправильный логин или пароль!'});
     }
