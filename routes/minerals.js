@@ -4,23 +4,50 @@ var models = require('../models');
 
 var middlewares = require('./middlewares');
 
+function getFieldsObject(object, allowedFields){
+  var fields = {};
+  for(var paramName in object){
+    if(allowedFields.indexOf(paramName)!=-1 && object[paramName]!=''){
+      fields[paramName] = object[paramName];
+    }
+  }
+  return fields;
+}
+
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   var itemsPerPage = 9;
   var pageCount = 0;
-  models.Mineral.count().then(function(mineralsCount){
+
+  var queryParams = {where:{}};
+  var fieldsLike = getFieldsObject(req.query, ['name', 'composition', 'color', 'color_p', 'shine', 'cleavage', 'crystal_form', 'mineral_aggregates', 'diagnostic_signs']);
+  for(var paramName in fieldsLike){
+    queryParams.where[paramName] = {$like: '%'+fieldsLike[paramName]+'%'};
+  };
+  if(req.query.mineral_class_id){
+    queryParams.where.mineral_class_id = req.query.mineral_class_id;
+  }
+  if(req.query.hardness){
+    queryParams.where.hardness_from = {$lte: parseFloat(req.query.hardness)};
+    queryParams.where.hardness_to = {$gte: parseFloat(req.query.hardness)};
+  }
+  if(req.query.density){
+    queryParams.where.density_from = {$lte: parseFloat(req.query.density)};
+    queryParams.where.density_to = {$gte: parseFloat(req.query.density)};
+  }
+
+  models.Mineral.count(queryParams).then(function(mineralsCount){
     pageCount = Math.ceil(mineralsCount / itemsPerPage);
-    return models.Mineral.findAll({
-      include: [{
+    queryParams.include = [{
         model: models.MineralClass,
         as: "MineralClass"
       }, {
         model: models.MineralImage,
         as: "MineralImage"
-      }],
-      limit: itemsPerPage,
-      offset: (req.query.page-1) * itemsPerPage
-    });
+      }];
+    queryParams.limit = itemsPerPage;
+    queryParams.offset = (req.query.page-1) * itemsPerPage;
+    return models.Mineral.findAll(queryParams);
   }).then(function(minerals){
     var result = {pageCount: pageCount, rows: minerals};
     res.json(result);

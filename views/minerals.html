@@ -7,14 +7,13 @@
 </style>
 <div id="mineralsController" ng-controller="mineralsController">
   <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
-  <p>
+  <p style="float: right;">
     <button class="btn btn-primary" data-toggle="modal" data-target="#editMineralModal">
       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить новый минерал
     </button>
   </p>
   <% } %>
   <p>
-    Вид:
     <button class="btn" ng-class="{'btn-info': view=='table'}" ng-click="view='table'">
       <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Табличный
     </button>
@@ -22,11 +21,10 @@
       <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Блочный
     </button>
   </p>
-  <div class="filter"></div>
-  <p>
-    <div class="columns form-inline">
-      Отображаемая информация:
-      <br>
+
+  <div class="panel panel-info">
+    <div class="panel-heading">Отображаемая информация</div>
+    <div class="panel-body form-inline columns">
       <div class="checkbox"><label><input type="checkbox" ng-model="columns.class"/> Класс</label></div>
       <div class="checkbox"><label><input type="checkbox" ng-model="columns.name" disabled/> Название</label></div>
       <div class="checkbox"><label><input type="checkbox" ng-model="columns.composition" disabled/> Хим. состав</label></div>
@@ -41,7 +39,95 @@
       <div class="checkbox"><label><input type="checkbox" ng-model="columns.diagnostic_signs" /> Диагностические признаки</label></div>
       <div class="checkbox"><label><input type="checkbox" ng-model="columns.images" /> Изображения</label></div>
     </div>
-  </p>
+  </div>
+  <div class="panel panel-info" ng-init="filterPanel=false">
+    <div class="panel-heading" ng-click="filterPanel=!filterPanel" style="cursor: pointer;">Фильтрация</div>
+    <div class="panel-body form-horizontal" ng-show="filterPanel">
+        <div class="form-group col-sm-6" ng-if="columns.class">
+          <label class="col-sm-4 control-label">Класс</label>
+          <div class="col-sm-8">
+            <select class="form-control" ng-model="searchParams.mineral_class_id">
+              <option ng-repeat="mineralClass in MineralClasses" ng-value="mineralClass.id">{{mineralClass.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.name">
+          <label class="col-sm-4 control-label">Название</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="searchParams.name" placeholder="Название" required>
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.composition">
+          <label class="col-sm-4 control-label">Химический состав</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="searchParams.composition" placeholder="Химический состав">
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.color">
+          <label class="col-sm-4 control-label">Цвет</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="searchParams.color" placeholder="Цвет">
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.color_p">
+          <label class="col-sm-4 control-label">Цвет черты</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="searchParams.color_p" placeholder="Цвет черты">
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.shine">
+          <label class="col-sm-4 control-label">Блеск</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="searchParams.shine" placeholder="Блеск">
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.hardness">
+          <label class="col-sm-4 control-label">Твердость</label>
+          <div class="col-sm-8">
+            <input type="number" class="form-control" ng-model="searchParams.hardness" placeholder="Твердость">
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.density">
+          <label class="col-sm-4 control-label">Плотность</label>
+          <div class="col-sm-4">
+            <input type="number" class="form-control" ng-model="searchParams.density" placeholder="Плотность">
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.cleavage">
+          <label class="col-sm-4 control-label">Спайность, излом</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="searchParams.cleavage" placeholder="Спайность, излом">
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.crystal_form">
+          <label class="col-sm-4 control-label">Форма кристаллов</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="searchParams.crystal_form" placeholder="Форма кристаллов">
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.mineral_aggregates">
+          <label class="col-sm-4 control-label">Минеральные агрегаты</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="searchParams.mineral_aggregates" placeholder="Минеральные агрегаты">
+          </div>
+        </div>
+        <div class="form-group col-sm-6" ng-if="columns.diagnostic_signs">
+          <label class="col-sm-4 control-label">Диагностические признаки</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" ng-model="searchParams.diagnostic_signs" placeholder="Диагностические признаки">
+          </div>
+        </div>
+    </div>
+    <div class="panel-footer" ng-show="filterPanel" style="text-align: right;">
+      <button class="btn btn-info" ng-click="fillMinerals()">
+        <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Поиск
+      </button>
+      <button class="btn btn-danger" ng-click="searchParams={};fillMinerals()">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Очистить
+      </button>
+    </div>
+  </div>
+  <div class="clearfix"></div>
   <table class="table table-bordered table-hover bg-info" ng-if="view=='table'">
     <thead>
       <tr>

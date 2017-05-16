@@ -24,13 +24,13 @@
 <nav class="navbar navbar-fixed-top navbar-inverse">
     <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/" target="_self">Ore minerals</a>
+            <a class="navbar-brand" href="/home" target="_self">Ore minerals</a>
             <a class="navbar-brand">></a>
             <a class="navbar-brand" href="#"><%= title %></a>
         </div>
         <% if (session.user){ %>
         <div class="navbar-right">
-            <a class="navbar-brand">Пользователь: <%= session.user.firstname+' '+session.user.lastname %> </a>
+            <a class="navbar-brand"><%= session.user.firstname+' '+session.user.lastname %> </a>
             <a class="navbar-brand" href="/logout">Выйти</a>
         </div>
         <% } else { %>

@@ -8,13 +8,16 @@ mineralApp.controller("mineralsController", function ($scope, $http, Mineral, Mi
       hardness: true,
       density: true
     };
+    $scope.searchParams = {};
     $scope.page = 1;
 
     fillMinerals();
     $scope.fillMinerals = fillMinerals;
 
     function fillMinerals(){
-      $http.get('/api/minerals', {params:{page: $scope.page}}).then(function(result) {
+      var params = $scope.searchParams;
+      params.page = $scope.page;
+      $http.get('/api/minerals', {params: params}).then(function(result) {
         $scope.Minerals = result.data.rows;
         $scope.pageCount = result.data.pageCount;
       }, handleError);
@@ -33,6 +36,12 @@ mineralApp.controller("mineralsController", function ($scope, $http, Mineral, Mi
       MineralClass.query(function(MineralClasses) {
         $scope.MineralClasses = MineralClasses;
       }, handleError);
+    }
+
+    $scope.uploadImageSuccess = function(data){
+        successAlert("Изображение успешно загружено");
+        $scope.editedMineral.MineralImage.push(data);
+        $scope.$apply();
     }
 
     $scope.saveMineral = function(){
@@ -108,9 +117,7 @@ $(document).on("submit", "form#uploadMineralImage", function(event){
         processData: false,
         contentType: false,
         success: function (data, status){
-          successAlert("Изображение успешно загружено");
-          $('#uploadImageModal').modal('hide');
-          angular.element('#mineralsController').scope().fillMinerals();
+          angular.element('#mineralsController').scope().uploadImageSuccess(data);
         },
         error: function (xhr, desc, err){
           errorAlert(err);

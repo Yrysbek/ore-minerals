@@ -3,14 +3,14 @@ var router = express.Router();
 var models = require('../models');
 var middlewares = require('./middlewares');
 
-router.get('/', function (req, res) {
+router.get('/home', function (req, res) {
     res.render('home.html', {title: 'Главная страница', session: req.session});
 });
 router.get('/admin', middlewares.hasRole('pageAdmin'), function (req, res) {
     res.render('admin.html', {title: 'Административная панель', session: req.session});
 });
 
-router.get('/minerals', function (req, res) {
+router.get('/', function (req, res) {
     res.render('minerals.html', {title: 'Рудные минералы', session: req.session});
 });
 router.get('/mineralClasses', function (req, res) {
