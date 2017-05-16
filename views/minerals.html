@@ -6,32 +6,42 @@
 }
 </style>
 <div id="mineralsController" ng-controller="mineralsController">
-  Вид:
-  <button class="btn" ng-class="{'btn-primary': view=='table'}" ng-click="view='table'">
-    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Табличный
-  </button>
-  <button class="btn" ng-class="{'btn-primary': view=='block'}" ng-click="view='block'">
-    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Блочный
-  </button>
-  <br><br>
+  <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
+  <p>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#editMineralModal">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить новый минерал
+    </button>
+  </p>
+  <% } %>
+  <p>
+    Вид:
+    <button class="btn" ng-class="{'btn-info': view=='table'}" ng-click="view='table'">
+      <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Табличный
+    </button>
+    <button class="btn" ng-class="{'btn-info': view=='block'}" ng-click="view='block'">
+      <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Блочный
+    </button>
+  </p>
   <div class="filter"></div>
-  <div class="columns form-inline">
-    Отображаемая информация:
-    <br>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.class"/> Класс</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.name" disabled/> Название</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.composition" disabled/> Хим. состав</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.color" /> Цвет</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.color_p" /> Цвет черты</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.shine" /> Блеск</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.hardness" /> Твердость</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.density" /> Плотность</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.cleavage" /> Спайность, излом</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.crystal_form" /> Форма кристаллов</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.mineral_aggregates" /> Минеральные агрегаты</label></div>
-    <div class="checkbox"><label><input type="checkbox" ng-model="columns.diagnostic_signs" /> Диагностические признаки</label></div>
-  </div>
-  <br>
+  <p>
+    <div class="columns form-inline">
+      Отображаемая информация:
+      <br>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.class"/> Класс</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.name" disabled/> Название</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.composition" disabled/> Хим. состав</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.color" /> Цвет</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.color_p" /> Цвет черты</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.shine" /> Блеск</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.hardness" /> Твердость</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.density" /> Плотность</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.cleavage" /> Спайность, излом</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.crystal_form" /> Форма кристаллов</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.mineral_aggregates" /> Минеральные агрегаты</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.diagnostic_signs" /> Диагностические признаки</label></div>
+      <div class="checkbox"><label><input type="checkbox" ng-model="columns.images" /> Изображения</label></div>
+    </div>
+  </p>
   <table class="table table-bordered table-hover bg-info" ng-if="view=='table'">
     <thead>
       <tr>
@@ -48,9 +58,8 @@
         <th ng-show="columns.crystal_form">Форма кристаллов</th>
         <th ng-show="columns.mineral_aggregates">Минеральные агрегаты</th>
         <th ng-show="columns.diagnostic_signs">Диагностические признаки</th>
-        <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
-          <th>Операции</th>
-        <% } %>
+        <th ng-show="columns.images">Изображения</th>
+        <th>Операции</th>
       </tr>
     </thead>
     <tbody>
@@ -68,16 +77,22 @@
         <td ng-show="columns.crystal_form">{{mineral.crystal_form}}</td>
         <td ng-show="columns.mineral_aggregates">{{mineral.mineral_aggregates}}</td>
         <td ng-show="columns.diagnostic_signs">{{mineral.diagnostic_signs}}</td>
-        <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
+        <td ng-show="columns.images">
+          <img ng-repeat="image in mineral.MineralImage" class="img-rounded" ng-src="{{image.url}}" alt="{{image.description}}" />
+        </td>
         <td>
-          <button class="btn btn-primary" ng-click="editMineral(mineral)">
+          <button class="btn btn-info" ng-click="viewMineral(mineral)" data-toggle="modal" data-target="#editMineralModal">
+            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+          </button>
+          <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
+          <button class="btn btn-primary" ng-click="editMineral(mineral)" data-toggle="modal" data-target="#editMineralModal">
             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
           </button>
           <button class="btn btn-danger" ng-click="deleteMineral(mineral)">
             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
           </button>
+          <% } %>
         </td>
-        <% } %>
       </tr>
     </tbody>
   </table>
@@ -86,7 +101,7 @@
       <div class="clearfix" ng-show="$index%3==0"></div>
       <div class="col-sm-4">
         <div class="panel panel-info">
-          <div class="panel-heading">
+          <div class="panel-heading" ng-click="viewMineral(mineral)" data-toggle="modal" data-target="#editMineralModal">
             <h3 class="panel-title">{{mineral.name}} - {{mineral.composition}}</h3>
           </div>
           <div class="panel-body">
@@ -100,13 +115,23 @@
             <p ng-show="columns.crystal_form">Форма кристаллов: {{mineral.crystal_form}}</p>
             <p ng-show="columns.mineral_aggregates">Минеральные агрегаты: {{mineral.mineral_aggregates}}</p>
             <p ng-show="columns.diagnostic_signs">Диагностические признаки: {{mineral.diagnostic_signs}}</p>
+            <p ng-show="columns.images">Изображения: 
+              <img ng-repeat="image in mineral.MineralImage" class="img-rounded" ng-src="{{image.url}}" alt="{{image.description}}" />
+            </p>
           </div>
-          <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
           <div class="panel-footer">
-            <button class="btn btn-primary" ng-click="editMineral(mineral)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
-            <button class="btn btn-danger" ng-click="deleteMineral(mineral)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+            <button class="btn btn-info" ng-click="viewMineral(mineral)" data-toggle="modal" data-target="#editMineralModal">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            </button>
+            <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
+            <button class="btn btn-primary" ng-click="editMineral(mineral)" data-toggle="modal" data-target="#editMineralModal">
+              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-danger" ng-click="deleteMineral(mineral)">
+              <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </button>
+            <% } %>
           </div>
-          <% } %>
         </div>
       </div>
     </div>
@@ -120,143 +145,135 @@
     </ul>
   </nav>
 
-  <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
-  <form id="editMineral" class="form-horizontal bg-info" style="padding: 20px 0;border-radius: 5px;">
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Класс</label>
-      <div class="col-sm-8">
-        <select class="form-control" ng-model="editedMineral.mineral_class_id">
-          <option ng-repeat="mineralClass in MineralClasses" ng-value="mineralClass.id">{{mineralClass.name}}</option>
-        </select>
+<!-- edit mineral modal -->
+<div class="modal fade" id="editMineralModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{(!editedMineral.id)?'Добавление':(viewMode)?'Просмотр':'Редактирование'}} минерала</h4>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Название</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" ng-model="editedMineral.name" placeholder="Название" required>
+      <div class="modal-body form-horizontal bg-info" style="padding: 20px 0;border-radius: 5px;">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Класс</label>
+            <div class="col-sm-8">
+              <select class="form-control" ng-model="editedMineral.mineral_class_id" ng-disabled="viewMode">
+                <option ng-repeat="mineralClass in MineralClasses" ng-value="mineralClass.id">{{mineralClass.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Название</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" ng-model="editedMineral.name" placeholder="Название" ng-disabled="viewMode" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Химический состав</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" ng-model="editedMineral.composition" placeholder="Химический состав" ng-disabled="viewMode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Цвет</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" ng-model="editedMineral.color" placeholder="Цвет" ng-disabled="viewMode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Цвет черты</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" ng-model="editedMineral.color_p" placeholder="Цвет черты" ng-disabled="viewMode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Блеск</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" ng-model="editedMineral.shine" placeholder="Блеск" ng-disabled="viewMode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Твердость</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" ng-model="editedMineral.hardness_from" placeholder="от" ng-disabled="viewMode">
+            </div>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" ng-model="editedMineral.hardness_to" placeholder="до" ng-disabled="viewMode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Плотность</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" ng-model="editedMineral.density_from" placeholder="от" ng-disabled="viewMode">
+            </div>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" ng-model="editedMineral.density_to" placeholder="до" ng-disabled="viewMode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Спайность, излом</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" ng-model="editedMineral.cleavage" placeholder="Спайность, излом" ng-disabled="viewMode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Форма кристаллов</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" ng-model="editedMineral.crystal_form" placeholder="Форма кристаллов" ng-disabled="viewMode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Минеральные агрегаты</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" ng-model="editedMineral.mineral_aggregates" placeholder="Минеральные агрегаты" ng-disabled="viewMode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Диагностические признаки</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" ng-model="editedMineral.diagnostic_signs" placeholder="Диагностические признаки" ng-disabled="viewMode">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Доп. информация</label>
+            <div class="col-sm-8">
+              <textarea class="form-control" ng-model="editedMineral.description" placeholder="Доп. информация" ng-disabled="viewMode"></textarea>
+            </div>
+          </div>
+          <div class="form-group" ng-if="editedMineral.id">
+            <label class="col-sm-3 control-label">Изображения</label>
+            <div class="col-sm-8">
+              <img ng-repeat="image in editedMineral.MineralImage" class="img-rounded" ng-src="{{image.url}}" alt="{{image.description}}" />
+            </div>
+            <div class="col-sm-offset-3 col-sm-8" ng-show="editedMineral.id && !viewMode">
+              <form id="uploadMineralImage" method="post"
+                encType="multipart/form-data">
+                <div class="form-group">
+                  <input class="form-control" type="file" name="image" id="image" accept="image/gif, image/jpeg, image/png" />
+                </div>
+                <div class="form-group">
+                  <textarea class="form-control" name="description" placeholder="Описание изображния"></textarea>
+                </div>
+                <div class="form-group">
+                  <input class="btn btn-primary" type="submit" value='Загрузить изображение' />
+                </div>
+              </form>
+            </div>
+          </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Химический состав</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" ng-model="editedMineral.composition" placeholder="Химический состав">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Цвет</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" ng-model="editedMineral.color" placeholder="Цвет">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Цвет черты</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" ng-model="editedMineral.color_p" placeholder="Цвет черты">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Блеск</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" ng-model="editedMineral.shine" placeholder="Блеск">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Твердость</label>
-      <div class="col-sm-4">
-        <input type="number" class="form-control" ng-model="editedMineral.hardness_from" placeholder="от">
-      </div>
-      <div class="col-sm-4">
-        <input type="number" class="form-control" ng-model="editedMineral.hardness_to" placeholder="до">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Плотность</label>
-      <div class="col-sm-4">
-        <input type="number" class="form-control" ng-model="editedMineral.density_from" placeholder="от">
-      </div>
-      <div class="col-sm-4">
-        <input type="number" class="form-control" ng-model="editedMineral.density_to" placeholder="до">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Спайность, излом</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" ng-model="editedMineral.cleavage" placeholder="Спайность, излом">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Форма кристаллов</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" ng-model="editedMineral.crystal_form" placeholder="Форма кристаллов">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Минеральные агрегаты</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" ng-model="editedMineral.mineral_aggregates" placeholder="Минеральные агрегаты">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Диагностические признаки</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" ng-model="editedMineral.diagnostic_signs" placeholder="Диагностические признаки">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="col-sm-3 control-label">Доп. информация</label>
-      <div class="col-sm-8">
-        <textarea class="form-control" ng-model="editedMineral.description" placeholder="Доп. информация"></textarea>
-      </div>
-    </div>
-    <div class="form-group" ng-if="editedMineral.id">
-      <label class="col-sm-3 control-label">Изображения</label>
-      <div class="col-sm-8">
-        <img ng-repeat="image in editedMineral.MineralImage" class="img-rounded" src="{{image.url}}" alt="{{image.description}}" />
-      </div>
-      <div class="col-sm-offset-3 col-sm-8" ng-show="editedMineral.id">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#uploadImageModal">Загрузить изображения</button>
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-3 col-sm-8">
-        <button class="btn btn-primary" ng-click="saveMineral()" ng-hide="editedMineral.id">
+      <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="saveMineral()" ng-show="!editedMineral.id && !viewMode">
           <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Сохранить
         </button>
-        <button class="btn btn-primary" ng-click="updateMineral(editedMineral)" ng-show="editedMineral.id">
+        <button class="btn btn-primary" ng-click="updateMineral(editedMineral)" ng-show="editedMineral.id && !viewMode">
           <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> Сохранить
         </button>
-        <button class="btn btn-danger" ng-click="editedMineral=null">
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Отмена
+        <button class="btn btn-danger" ng-click="editedMineral=null" data-dismiss="modal">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Закрыть
         </button>
       </div>
     </div>
-  </form>
-
-    <!-- upload image modal -->
-    <div class="modal fade" id="uploadImageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Загрузка изображений</h4>
-          </div>
-          <div class="modal-body">
-            <form id="uploadMineralImage" method="post"
-              encType="multipart/form-data">
-              <div class="form-group">
-                <input class="form-control" type="file" name="image" id="image" accept="image/gif, image/jpeg, image/png" />
-              </div>
-              <div class="form-group">
-                <textarea class="form-control" name="description" placeholder="Описание"></textarea>
-              </div>
-              <div class="form-group">
-                <input class="btn btn-primary" type="submit" value='Загрузить' />
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  <% } %>
+  </div>
+</div>
 </div>
 <% include layout_footer.html %>
