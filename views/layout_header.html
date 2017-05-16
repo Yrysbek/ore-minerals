@@ -21,23 +21,34 @@
     <script src="/js/bootstrap-notify.min.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-fixed-top navbar-inverse">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/home" target="_self">Ore minerals</a>
-            <a class="navbar-brand">></a>
-            <a class="navbar-brand" href="#"><%= title %></a>
-        </div>
-        <% if (session.user){ %>
-        <div class="navbar-right">
-            <a class="navbar-brand"><%= session.user.firstname+' '+session.user.lastname %> </a>
-            <a class="navbar-brand" href="/logout">Выйти</a>
-        </div>
-        <% } else { %>
-        <div class="navbar-right">
-            <a class="navbar-brand" href="/auth">Войти</a>
-        </div>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Рудные минералы</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+      <ul class="nav navbar-nav">
+        <li><a href="/home">Главная</a></li>
+        <li><a href="/mineral-classes">Классы рудных пород</a></li>
+        <% if(session.user && session.user.roles.indexOf('pageAdmin')!=-1){ %>
+          <li><a href="/admin">Административная панель</a></li>
         <% } %>
-    </div><!-- /.container -->
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <% if(session.user){ %>
+          <li><a><%= session.user.firstname+' '+session.user.lastname %></a></li>
+          <li><a href="/logout">Выйти</a></li>
+        <% } else { %>
+          <li><a href="/auth">Войти</a></li>
+        <% } %>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
 </nav>
 <div class="container" style="padding-top: 40px;">
