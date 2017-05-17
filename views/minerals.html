@@ -8,7 +8,7 @@
 <div id="mineralsController" ng-controller="mineralsController">
   <% if(session.user && session.user.roles.indexOf('mineralsAdmin')!=-1){ %>
   <p style="float: right;">
-    <button class="btn btn-primary" data-toggle="modal" data-target="#editMineralModal">
+    <button class="btn btn-primary" data-toggle="modal" data-target="#editMineralModal" ng-click="editedMineral={}">
       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить новый минерал
     </button>
   </p>
